@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.application'
+}
+
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("signing.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+
+android {
+    compileSdkVersion 34
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.example.kinginstaller"
+        minSdkVersion 26
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.4"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        config {
+            storeFile file("keysing.jks")
+            storePassword keystoreProperties['STORE_PASSWORD']
+            keyAlias keystoreProperties['KEYSTORE_ALIAS']
+            keyPassword keystoreProperties['KEY_PASSWORD']
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.config
+        }
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.example.kinginstaller'
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}
